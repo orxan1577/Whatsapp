@@ -36,31 +36,28 @@
         .chat-list-container { flex: 1; overflow-y: auto; }
         .chat-row { display: flex; align-items: center; padding: 12px 16px; cursor: pointer; gap: 14px; border-bottom: 1px solid #111b21; }
         .chat-row:active { background: #1f2c34; }
-        .avatar-box { width: 50px; height: 50px; flex-shrink: 0; border-radius: 50%; background: #2a3942; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; font-size: 18px; overflow: hidden; }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-box { width: 50px; height: 50px; flex-shrink: 0; border-radius: 50%; background: #2a3942; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; font-size: 18px; overflow: hidden; position: relative; }
+        .avatar-box.status-ring { border: 2px solid #25d366; padding: 1px; }
+        .avatar-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         
         .chat-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 4px; }
-        .chat-info-top { display: flex; justifyContent: space-between; align-items: center; }
+        .chat-info-top { display: flex; justify-content: space-between; align-items: center; }
         .user-name-text { font-size: 16px; font-weight: 500; color: #e9edef; }
         .time-text { font-size: 12px; color: #8696a0; }
         .chat-info-bottom { display: flex; justify-content: space-between; align-items: center; }
         .last-msg-text { font-size: 14px; color: #8696a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Floating New Chat (+) Button */
-        .new-chat-btn { position: absolute; bottom: 80px; right: 20px; width: 56px; height: 56px; background: #25d366; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #111b21; font-size: 22px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); cursor: pointer; z-index: 5; }
+        .new-chat-btn { position: absolute; bottom: 75px; right: 16px; width: 56px; height: 56px; background: #25d366; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #111b21; font-size: 22px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); cursor: pointer; z-index: 5; }
 
-        /* Bottom Navigation */
         .bottom-nav { height: 64px; background: #0b141a; border-top: 1px solid #1f2c34; display: flex; justify-content: space-around; align-items: center; }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #8696a0; font-size: 12px; cursor: pointer; }
         .nav-item i { font-size: 20px; padding: 4px 16px; border-radius: 16px; }
         .nav-item.active { color: #e9edef; font-weight: 600; }
         .nav-item.active i { background: #103629; color: #25d366; }
 
-        /* Views (Chats, Status, Calls) */
         .view-section { display: none; flex: 1; flex-direction: column; overflow-y: auto; }
         .view-section.active { display: flex; }
 
-        /* Conversation Window */
         .conversation-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0b141a; display: flex; flex-direction: column; z-index: 10; }
         .conv-header { background: #1f2c34; padding: 10px 12px; display: flex; align-items: center; gap: 8px; }
         .conv-header i.back-btn { font-size: 18px; color: #8696a0; cursor: pointer; padding: 4px; }
@@ -79,7 +76,6 @@
         .input-wrapper input { background: transparent; border: none; color: #fff; font-size: 15px; outline: none; width: 100%; }
         .send-circle-btn { width: 44px; height: 44px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #111b21; font-size: 16px; cursor: pointer; flex-shrink: 0; }
 
-        /* Modal for Contacts / Status */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 100; }
         .modal-content { background: #111b21; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 15px; border: 1px solid #2a3942; }
         .modal-content h3 { color: #25d366; }
@@ -111,7 +107,7 @@
                 <input type="text" id="user-name" placeholder="Adınızı daxil edin">
             </div>
             <div class="input-group">
-                <label>Profil şəkli (link və ya seçin)</label>
+                <label>Profil şəkli</label>
                 <input type="file" id="profile-img-file" accept="image/*" style="color:#8696a0;">
             </div>
             <button class="btn-main" onclick="registerUser()">Daxil Ol</button>
@@ -133,7 +129,7 @@
                 <div class="search-area">
                     <div class="search-input-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Axtarış...">
+                        <input type="text" placeholder="Axtarış edin...">
                     </div>
                 </div>
                 <div class="filter-chips">
@@ -141,23 +137,22 @@
                     <div class="chip">Oxunmamış</div>
                     <div class="chip">Sevimlilər</div>
                 </div>
-                <div class="chat-list-container" id="chat-list">
-                    <!-- Dinamik çatlar bura yığılacaq -->
-                </div>
+                <div class="chat-list-container" id="chat-list"></div>
             </div>
 
             <!-- STATUS VIEW -->
             <div id="view-status" class="view-section">
                 <div style="padding: 16px;">
-                    <h3 style="color:#25d366; margin-bottom:15px;">Statuslar</h3>
-                    <div onclick="openStatusModal()" style="display:flex; align-items:center; gap:14px; cursor:pointer; margin-bottom:20px;">
+                    <h3 style="color:#e9edef; font-size: 20px; margin-bottom: 16px;">Status</h3>
+                    <div onclick="openStatusModal()" style="display:flex; align-items:center; gap:14px; cursor:pointer; margin-bottom:24px;">
                         <div class="avatar-box" style="background:#25d366; color:#111b21;"><i class="fa-solid fa-plus"></i></div>
                         <div>
-                            <div style="font-weight:500;">Status əlavə et</div>
-                            <div style="font-size:12px; color:#8696a0;">1 dəqiqəlik status paylaş</div>
+                            <div style="font-weight:500; font-size:16px;">Mənim statusum</div>
+                            <div style="font-size:13px; color:#8696a0;">Mətn və ya şəkil/video status əlavə et</div>
                         </div>
                     </div>
-                    <div id="status-list"></div>
+                    <div style="font-size: 13px; color: #8696a0; margin-bottom: 12px; text-transform: uppercase; font-weight: 600;">Son yeniləmələr (24 saat)</div>
+                    <div id="status-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
                 </div>
             </div>
 
@@ -166,7 +161,7 @@
                 <div style="padding: 16px; color:#8696a0;">Zənglər tarixçəsi boşdur.</div>
             </div>
 
-            <!-- Floating New Chat Button (+) -->
+            <!-- Floating New Chat (+) Button -->
             <div class="new-chat-btn" onclick="openNewChatModal()">
                 <i class="fa-solid fa-comment-medical"></i>
             </div>
@@ -213,7 +208,7 @@
         <!-- NEW CHAT MODAL -->
         <div id="modal-new-chat" class="modal hidden">
             <div class="modal-content">
-                <h3>Yeni Söhbət / İstifadəçilər</h3>
+                <h3>Yeni Söhbət</h3>
                 <div id="registered-users-list" style="max-height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
                 <button class="btn-main" onclick="closeModals()" style="margin-top:0;">Bağla</button>
             </div>
@@ -222,8 +217,10 @@
         <!-- STATUS POST MODAL -->
         <div id="modal-status" class="modal hidden">
             <div class="modal-content">
-                <h3>Status Paylaş (1 dəqiqəlik)</h3>
-                <input type="text" id="status-text-input" placeholder="Nə düşünürsünüz?" style="width:100%; padding:10px; background:#1f2c34; border:1px solid #2a3942; border-radius:8px; color:#fff; outline:none;">
+                <h3>Status Paylaş (24 saatlıq)</h3>
+                <input type="text" id="status-text-input" placeholder="Status mətni yazın..." style="width:100%; padding:12px; background:#1f2c34; border:1px solid #2a3942; border-radius:8px; color:#fff; outline:none; font-size:15px;">
+                <div style="font-size:12px; color:#8696a0;">və ya Şəkil / Video seçin (Video max 1 dəqiqə):</div>
+                <input type="file" id="status-media-file" accept="image/*,video/*" style="color:#8696a0; font-size:13px;">
                 <button class="btn-main" onclick="postStatus()">Paylaş</button>
                 <button class="btn-main" onclick="closeModals()" style="background:#1f2c34; color:#fff; margin-top:0;">Ləğv et</button>
             </div>
@@ -234,8 +231,9 @@
     <script>
         let currentUser = JSON.parse(localStorage.getItem('wa_current_user')) || null;
         let profilePicBase64 = "";
+        let statusMediaBase64 = "";
+        let statusMediaType = "text";
 
-        // Profil şəklini oxumaq
         document.getElementById('profile-img-file').addEventListener('change', function(e) {
             let file = e.target.files[0];
             if(file) {
@@ -245,7 +243,39 @@
             }
         });
 
-        // Yoxla görək əvvəldən daxil olubmu?
+        document.getElementById('status-media-file').addEventListener('change', function(e) {
+            let file = e.target.files[0];
+            if(file) {
+                if(file.type.startsWith('video/')) {
+                    let videoElement = document.createElement('video');
+                    videoElement.preload = 'metadata';
+                    videoElement.onloadedmetadata = function() {
+                        window.URL.revokeObjectURL(videoElement.src);
+                        if(videoElement.duration > 60) {
+                            alert('Video 1 dəqiqədən (60 saniyədən) çox ola bilməz!');
+                            document.getElementById('status-media-file').value = '';
+                            statusMediaBase64 = "";
+                        } else {
+                            let reader = new FileReader();
+                            reader.onload = function(event) {
+                                statusMediaBase64 = event.target.result;
+                                statusMediaType = "video";
+                            }
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                    videoElement.src = URL.createObjectURL(file);
+                } else if(file.type.startsWith('image/')) {
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                        statusMediaBase64 = event.target.result;
+                        statusMediaType = "image";
+                    }
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
         if(currentUser) {
             startMainApp();
         }
@@ -265,16 +295,17 @@
             currentUser = {
                 name: name,
                 phone: phone,
-                avatar: profilePicBase64 || name.charAt(0).toUpperCase()
+                avatar: profilePicBase64 || ""
             };
 
-            // Bütün istifadəçilər bazasına əlavə et
             let users = JSON.parse(localStorage.getItem('wa_users')) || [];
-            if(!users.some(u => u.phone === phone)) {
+            let index = users.findIndex(u => u.phone === phone);
+            if(index >= 0) {
+                users[index] = currentUser;
+            } else {
                 users.push(currentUser);
-                localStorage.setItem('wa_users', JSON.stringify(users));
             }
-
+            localStorage.setItem('wa_users', JSON.stringify(users));
             localStorage.setItem('wa_current_user', JSON.stringify(currentUser));
             startMainApp();
         }
@@ -299,7 +330,7 @@
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
             el.classList.add('active');
             if(index === 0) document.getElementById('view-chats').classList.add('active');
-            if(index === 1) document.getElementById('view-status').classList.add('active');
+            if(index === 1) { document.getElementById('view-status').classList.add('active'); loadStatuses(); }
             if(index === 2) document.getElementById('view-calls').classList.add('active');
         }
 
@@ -307,21 +338,27 @@
             let chatList = document.getElementById('chat-list');
             chatList.innerHTML = '';
             let users = JSON.parse(localStorage.getItem('wa_users')) || [];
+            let statuses = JSON.parse(localStorage.getItem('wa_statuses')) || [];
+            let now = new Date().getTime();
+            let twentyFourHours = 24 * 60 * 60 * 1000;
             
-            // Özündən başqa digər qeydiyyatdan keçənləri göstər
+            let activeStatusPhones = statuses.filter(s => (now - s.time) < twentyFourHours).map(s => s.phone);
+
             users.forEach(u => {
                 if(currentUser && u.phone !== currentUser.phone) {
-                    let avatarContent = u.avatar.length > 5 ? `<img src="${u.avatar}">` : u.avatar.charAt(0);
+                    let hasStatus = activeStatusPhones.includes(u.phone);
+                    let avatarHtml = u.avatar ? `<img src="${u.avatar}">` : u.name.charAt(0).toUpperCase();
+                    
                     chatList.innerHTML += `
                         <div class="chat-row" onclick="openChat('${u.name}', '${u.phone}')">
-                            <div class="avatar-box">${avatarContent}</div>
+                            <div class="avatar-box ${hasStatus ? 'status-ring' : ''}">${avatarHtml}</div>
                             <div class="chat-info">
                                 <div class="chat-info-top">
                                     <span class="user-name-text">${u.name}</span>
                                     <span class="time-text">İndi</span>
                                 </div>
                                 <div class="chat-info-bottom">
-                                    <span class="last-msg-text">Söhbətə başla...</span>
+                                    <span class="last-msg-text">${hasStatus ? 'Yeni status paylaşdı' : 'Söhbətə başla...'}</span>
                                 </div>
                             </div>
                         </div>`;
@@ -334,7 +371,14 @@
         function openChat(name, phone) {
             activeChatUserPhone = phone;
             document.getElementById('conv-title-text').innerText = name;
-            document.getElementById('conv-avatar-text').innerText = name.charAt(0);
+            let users = JSON.parse(localStorage.getItem('wa_users')) || [];
+            let targetUser = users.find(u => u.phone === phone);
+            let avatarBox = document.getElementById('conv-avatar');
+            if(targetUser && targetUser.avatar) {
+                avatarBox.innerHTML = `<img src="${targetUser.avatar}">`;
+            } else {
+                avatarBox.innerHTML = name.charAt(0).toUpperCase();
+            }
             document.getElementById('conversation-screen').classList.remove('hidden');
             loadMessages();
         }
@@ -388,7 +432,7 @@
             users.forEach(u => {
                 if(currentUser && u.phone !== currentUser.phone) {
                     list.innerHTML += `
-                        <div style="padding:10px; background:#1f2c34; border-radius:8px; cursor:pointer;" onclick="closeModals(); openChat('${u.name}', '${u.phone}')">
+                        <div style="padding:10px; background:#1f2c34; border-radius:8px; cursor:pointer; color:#fff;" onclick="closeModals(); openChat('${u.name}', '${u.phone}')">
                             ${u.name} (${u.phone})
                         </div>`;
                 }
@@ -406,34 +450,74 @@
 
         function postStatus() {
             let text = document.getElementById('status-text-input').value;
-            if(!text) return;
+            if(!text && !statusMediaBase64) {
+                alert('Mətn və ya şəkil/video daxil edin!');
+                return;
+            }
+
             let statuses = JSON.parse(localStorage.getItem('wa_statuses')) || [];
-            
-            let statusObj = { name: currentUser.name, text: text, time: new Date().getTime() };
+            statuses = statuses.filter(s => s.phone !== currentUser.phone);
+
+            let statusObj = {
+                phone: currentUser.phone,
+                name: currentUser.name,
+                text: text,
+                media: statusMediaBase64,
+                mediaType: statusMediaType,
+                time: new Date().getTime()
+            };
+
             statuses.push(statusObj);
             localStorage.setItem('wa_statuses', JSON.stringify(statuses));
 
             document.getElementById('status-text-input').value = '';
+            document.getElementById('status-media-file').value = '';
+            statusMediaBase64 = "";
+            statusMediaType = "text";
+
             closeModals();
             loadStatuses();
-            alert('Status 1 dəqiqəliyə paylaşıldı!');
+            alert('Status 24 saatlıq paylaşıldı!');
         }
 
         function loadStatuses() {
             let list = document.getElementById('status-list');
             list.innerHTML = '';
             let statuses = JSON.parse(localStorage.getItem('wa_statuses')) || [];
+            let users = JSON.parse(localStorage.getItem('wa_users')) || [];
             let now = new Date().getTime();
+            let twentyFourHours = 24 * 60 * 60 * 1000;
 
-            // 1 dəqiqədən (60000 ms) köhnə statusları təmizlə
-            statuses = statuses.filter(s => (now - s.time) < 60000);
+            statuses = statuses.filter(s => (now - s.time) < twentyFourHours);
             localStorage.setItem('wa_statuses', JSON.stringify(statuses));
 
+            if(statuses.length === 0) {
+                list.innerHTML = '<div style="color:#8696a0; font-size:14px;">Aktiv status yoxdur.</div>';
+                return;
+            }
+
             statuses.forEach(s => {
+                let userObj = users.find(u => u.phone === s.phone);
+                let avatarHtml = userObj && userObj.avatar ? `<img src="${userObj.avatar}">` : s.name.charAt(0).toUpperCase();
+
+                let mediaHtml = "";
+                if(s.mediaType === 'image' && s.media) {
+                    mediaHtml = `<img src="${s.media}" style="width:100%; max-height:250px; object-fit:cover; border-radius:8px; margin-top:6px;">`;
+                } else if(s.mediaType === 'video' && s.media) {
+                    mediaHtml = `<video src="${s.media}" controls style="width:100%; max-height:250px; border-radius:8px; margin-top:6px;"></video>`;
+                }
+
                 list.innerHTML += `
-                    <div style="padding:10px; background:#1f2c34; border-radius:8px; margin-bottom:8px;">
-                        <div style="font-weight:bold; color:#25d366; font-size:14px;">${s.name}</div>
-                        <div style="font-size:15px; margin-top:4px;">${s.text}</div>
+                    <div style="display:flex; flex-direction:column; gap:6px; padding:10px; background:#1f2c34; border-radius:8px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="avatar-box status-ring" style="width:40px; height:40px;">${avatarHtml}</div>
+                            <div>
+                                <div style="font-weight:500; font-size:15px; color:#e9edef;">${s.name}</div>
+                                <div style="font-size:11px; color:#8696a0;">24 saatlıq status</div>
+                            </div>
+                        </div>
+                        ${s.text ? `<div style="font-size:14px; color:#e9edef; margin-top:4px;">${s.text}</div>` : ''}
+                        ${mediaHtml}
                     </div>`;
             });
         }
