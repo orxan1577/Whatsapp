@@ -2,133 +2,617 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>WhatsApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
-            background-color: #111b21;
+            background-color: #0b141a;
             color: #e9edef;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
-        .container {
+        .app-container {
             width: 100%;
-            max-width: 400px;
-            background: #222d34;
+            height: 100%;
+            max-width: 450px;
+            background: #111b21;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Auth Screens */
+        .auth-screen {
             padding: 30px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
             text-align: center;
         }
-        h2 {
+        .auth-screen h2 {
             color: #00a884;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-size: 22px;
         }
-        p {
+        .auth-screen p {
             font-size: 14px;
             color: #8696a0;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            line-height: 1.4;
         }
         .input-group {
+            width: 100%;
             margin-bottom: 15px;
             text-align: left;
         }
-        label {
+        .input-group label {
             display: block;
             font-size: 12px;
             color: #00a884;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
-        input {
+        .input-group input {
             width: 100%;
-            padding: 12px;
-            background: #2a3942;
-            border: 1px solid #374248;
-            border-radius: 5px;
+            padding: 13px;
+            background: #202c33;
+            border: 1px solid #2a3942;
+            border-radius: 8px;
             color: #fff;
             font-size: 16px;
+            outline: none;
         }
-        button {
+        .input-group input:focus {
+            border-color: #00a884;
+        }
+        .btn-main {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             background: #00a884;
             border: none;
-            border-radius: 5px;
-            color: #fff;
+            border-radius: 8px;
+            color: #111b21;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 15px;
+            transition: 0.2s;
         }
-        button:hover {
-            background: #008f72;
+        .btn-main:active {
+            transform: scale(0.98);
         }
-        .hidden {
-            display: none;
+
+        /* Main WhatsApp Interface */
+        .main-app {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
         }
+        
+        /* Header */
+        .header {
+            background: #202c33;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #8696a0;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #8696a0;
+        }
+        .header-icons i {
+            font-size: 18px;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: #202c33;
+            display: flex;
+            border-bottom: 1px solid #222d34;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #8696a0;
+            cursor: pointer;
+            position: relative;
+            text-transform: uppercase;
+        }
+        .tab.active {
+            color: #00a884;
+            border-bottom: 3px solid #00a884;
+        }
+
+        /* Search Bar */
+        .search-box {
+            padding: 8px 12px;
+            background: #111b21;
+        }
+        .search-wrapper {
+            background: #202c33;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+        }
+        .search-wrapper i {
+            color: #8696a0;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+        .search-wrapper input {
+            background: transparent;
+            border: none;
+            color: #e9edef;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        /* Chat List */
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .chat-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #1f2c34;
+        }
+        .chat-item:active {
+            background: #202c33;
+        }
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #6b7c85;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .chat-details {
+            flex: 1;
+            overflow: hidden;
+        }
+        .chat-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        .chat-name {
+            font-weight: 600;
+            color: #e9edef;
+            font-size: 16px;
+        }
+        .chat-time {
+            font-size: 12px;
+            color: #8696a0;
+        }
+        .chat-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-msg {
+            font-size: 14px;
+            color: #8696a0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .unread-badge {
+            background: #00a884;
+            color: #111b21;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 2px 6px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: #00a884;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #111b21;
+            font-size: 22px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        /* Active Conversation Screen */
+        .conversation-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0b141a;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+        .conv-header {
+            background: #202c33;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+        }
+        .conv-header i.back-btn {
+            font-size: 18px;
+            color: #8696a0;
+            margin-right: 10px;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .conv-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #00a884;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .conv-info {
+            flex: 1;
+        }
+        .conv-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .conv-status {
+            font-size: 12px;
+            color: #8696a0;
+        }
+        .conv-icons i {
+            color: #8696a0;
+            font-size: 18px;
+            margin-left: 18px;
+            cursor: pointer;
+        }
+
+        /* Messages Body */
+        .messages-area {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-image: radial-gradient(#1f2c34 1px, transparent 0);
+            background-size: 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .msg-bubble {
+            max-width: 75%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            position: relative;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .msg-incoming {
+            background: #202c33;
+            align-self: flex-start;
+            border-top-left-radius: 0;
+        }
+        .msg-outgoing {
+            background: #005c4b;
+            align-self: flex-end;
+            border-top-right-radius: 0;
+        }
+        .msg-time {
+            font-size: 10px;
+            color: #8696a0;
+            float: right;
+            margin-top: 4px;
+            margin-left: 10px;
+        }
+        .msg-outgoing .msg-time {
+            color: #25d366;
+        }
+
+        /* Input Area */
+        .input-bar {
+            padding: 8px 10px;
+            background: #202c33;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-bar i {
+            color: #8696a0;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .message-input {
+            flex: 1;
+            background: #2a3942;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            background: #00a884;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #111b21;
+            cursor: pointer;
+        }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="step-phone">
+    <div class="app-container">
+        
+        <!-- STEP 1: Phone Auth -->
+        <div id="step-phone" class="auth-screen">
             <h2>WhatsApp-a Xoş Gəlmisiniz</h2>
             <p>Davam etmək üçün telefon nömrənizi daxil edin</p>
-            
             <div class="input-group">
                 <label>Ölkə</label>
                 <input type="text" value="Azerbaijan (+994)" readonly>
             </div>
-            
             <div class="input-group">
                 <label>Telefon nömrəsi</label>
                 <input type="tel" id="phone" placeholder="050 000 00 00">
             </div>
-            
-            <button onclick="sendCode()">Növbəti</button>
+            <button class="btn-main" onclick="goToCode()">Növbəti</button>
         </div>
 
-        <div id="step-code" class="hidden">
+        <!-- STEP 2: Code Auth -->
+        <div id="step-code" class="auth-screen hidden">
             <h2>Kodu daxil edin</h2>
             <p id="code-info"></p>
-            
             <div class="input-group">
                 <label>Təsdiq kodu (6 rəqəm)</label>
-                <input type="text" id="verify-code" placeholder="_ _ _ _ _ _">
+                <input type="text" id="verify-code" placeholder="_ _ _ _ _ _" maxlength="6">
             </div>
-            
-            <button onclick="verifyCode()">Təsdiq Et</button>
+            <button class="btn-main" onclick="goToProfile()">Təsdiq Et</button>
         </div>
+
+        <!-- STEP 3: Profile Setup -->
+        <div id="step-profile" class="auth-screen hidden">
+            <h2>Profil Məlumatı</h2>
+            <p>Adınızı və profil şəklinizi daxil edin</p>
+            <div class="avatar" style="width: 80px; height: 80px; margin-bottom: 20px; font-size: 32px;" onclick="alert('Şəkil seçildi')">
+                <i class="fa-solid fa-camera"></i>
+            </div>
+            <div class="input-group">
+                <label>Profil Adınız</label>
+                <input type="text" id="user-name" placeholder="Adınızı yazın (məs: Orxan Usta)">
+            </div>
+            <button class="btn-main" onclick="startApp()">Daxil Ol</button>
+        </div>
+
+        <!-- MAIN WHATSAPP APP -->
+        <div id="main-app" class="main-app hidden">
+            <!-- Header -->
+            <div class="header">
+                <div class="title">WhatsApp</div>
+                <div class="header-icons">
+                    <i class="fa-solid fa-camera"></i>
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="nav-tabs">
+                <div class="tab active">Çatlar</div>
+                <div class="tab">Status</div>
+                <div class="tab">Zənglər</div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-box">
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Axtarış edin...">
+                </div>
+            </div>
+
+            <!-- Chat List -->
+            <div class="chat-list" id="chat-list">
+                <!-- Sample Chats -->
+                <div class="chat-item" onclick="openChat('Dəstək Xidməti', 'D')">
+                    <div class="avatar" style="background-color: #00a884;">D</div>
+                    <div class="chat-details">
+                        <div class="chat-top">
+                            <span class="chat-name">Dəstək Xidməti</span>
+                            <span class="chat-time">12:30</span>
+                        </div>
+                        <div class="chat-bottom">
+                            <span class="chat-msg">Xoş gəlmisiniz! Sistem tam aktivdir.</span>
+                            <span class="unread-badge">1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-item" onclick="openChat('Ailə Qrupu', 'A')">
+                    <div class="avatar" style="background-color: #6b7c85;">A</div>
+                    <div class="chat-details">
+                        <div class="chat-top">
+                            <span class="chat-name">Ailə Qrupu</span>
+                            <span class="chat-time">Dünən</span>
+                        </div>
+                        <div class="chat-bottom">
+                            <span class="chat-msg">Hər vaxtınız xeyir!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Button -->
+            <div class="fab" onclick="alert('Yeni söhbət yaradın')">
+                <i class="fa-solid fa-message"></i>
+            </div>
+        </div>
+
+        <!-- CONVERSATION SCREEN -->
+        <div id="conversation-screen" class="conversation-screen hidden">
+            <div class="conv-header">
+                <i class="fa-solid fa-arrow-left back-btn" onclick="closeChat()"></i>
+                <div class="conv-avatar" id="conv-avatar-icon">D</div>
+                <div class="conv-info">
+                    <div class="conv-title" id="conv-title-text">Dəstək Xidməti</div>
+                    <div class="conv-status">onlayn</div>
+                </div>
+                <div class="conv-icons">
+                    <i class="fa-solid fa-video"></i>
+                    <i class="fa-solid fa-phone"></i>
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </div>
+            </div>
+
+            <div class="messages-area" id="messages-area">
+                <div class="msg-bubble msg-incoming">
+                    Salam! WhatsApp hesabınız uğurla aktivləşdirildi. Nə sualınız var?
+                    <span class="msg-time">12:30</span>
+                </div>
+            </div>
+
+            <div class="input-bar">
+                <i class="fa-regular fa-face-smile"></i>
+                <i class="fa-solid fa-paperclip"></i>
+                <input type="text" class="message-input" id="msg-input" placeholder="Mesaj yazın...">
+                <div class="send-btn" onclick="sendMessage()">
+                    <i class="fa-solid fa-paper-plane" style="font-size: 16px;"></i>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        function sendCode() {
+        var userPhone = "";
+        var userName = "Orxan Usta";
+
+        function goToCode() {
             var phone = document.getElementById('phone').value;
-            if(phone.length < 9) {
-                alert('Zəhmət olmasa düzgün nömrə daxil edin!');
-            } else {
-                document.getElementById('step-phone').classList.add('hidden');
-                document.getElementById('step-code').classList.remove('hidden');
-                document.getElementById('code-info').innerText = 'Kod bu nömrəyə göndərildi: ' + phone;
+            if(phone.length < 7) {
+                alert('Zəhmət olmasa düzgün telefon nömrəsi daxil edin!');
+                return;
             }
+            userPhone = phone;
+            document.getElementById('code-info').innerText = 'Kod bu nömrəyə göndərildi: ' + phone;
+            document.getElementById('step-phone').classList.add('hidden');
+            document.getElementById('step-code').classList.remove('hidden');
         }
 
-        function verifyCode() {
+        function goToProfile() {
             var code = document.getElementById('verify-code').value;
             if(code.length < 4) {
-                alert('Zəhmət olmasa kodu tam daxil edin!');
-            } else {
-                alert('Uğurla daxil oldunuz!');
+                alert('Təsdiq kodunu tam daxil edin!');
+                return;
             }
+            document.getElementById('step-code').classList.add('hidden');
+            document.getElementById('step-profile').classList.remove('hidden');
         }
+
+        function startApp() {
+            var nameInput = document.getElementById('user-name').value;
+            if(nameInput.trim() !== "") {
+                userName = nameInput;
+            }
+            document.getElementById('step-profile').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+        }
+
+        function openChat(title, icon) {
+            document.getElementById('conv-title-text').innerText = title;
+            document.getElementById('conv-avatar-icon').innerText = icon;
+            document.getElementById('conversation-screen').classList.remove('hidden');
+        }
+
+        function closeChat() {
+            document.getElementById('conversation-screen').classList.add('hidden');
+        }
+
+        function sendMessage() {
+            var input = document.getElementById('msg-input');
+            var text = input.value.trim();
+            if(text === "") return;
+
+            var msgArea = document.getElementById('messages-area');
+            var now = new Date();
+            var timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            // Add outgoing message
+            var outMsg = document.createElement('div');
+            outMsg.className = 'msg-bubble msg-outgoing';
+            outMsg.innerHTML = text + '<span class="msg-time">' + timeStr + ' <i class="fa-solid fa-check-double"></i></span>';
+            msgArea.appendChild(outMsg);
+
+            input.value = "";
+            msgArea.scrollTop = msgArea.scrollHeight;
+
+            // Auto reply simulation after 1 sec
+            setTimeout(function() {
+                var inMsg = document.createElement('div');
+                inMsg.className = 'msg-bubble msg-incoming';
+                inMsg.innerHTML = 'Cavab qəbul edildi! (' + text + ')<span class="msg-time">' + timeStr + '</span>';
+                msgArea.appendChild(inMsg);
+                msgArea.scrollTop = msgArea.scrollHeight;
+            }, 1000);
+        }
+
+        // Allow sending message with Enter key
+        document.getElementById('msg-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
     </script>
 </body>
 </html>
