@@ -6,481 +6,83 @@
     <title>WhatsApp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            background-color: #0b141a;
-            color: #e9edef;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .app-container {
-            width: 100%;
-            height: 100%;
-            max-width: 450px;
-            background: #0b141a;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #0b141a; color: #e9edef; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .app-container { width: 100%; height: 100%; max-width: 450px; background: #0b141a; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        
+        .auth-screen { padding: 30px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }
+        .auth-screen h2 { color: #25d366; margin-bottom: 15px; font-size: 22px; }
+        .auth-screen p { font-size: 14px; color: #8696a0; margin-bottom: 25px; }
+        .input-group { width: 100%; margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 12px; color: #25d366; margin-bottom: 6px; }
+        .input-group input { width: 100%; padding: 13px; background: #1f2c34; border: 1px solid #2a3942; border-radius: 8px; color: #fff; font-size: 16px; outline: none; }
+        .btn-main { width: 100%; padding: 13px; background: #25d366; border: none; border-radius: 8px; color: #111b21; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 15px; }
 
-        /* Auth Screens */
-        .auth-screen {
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
-        }
-        .auth-screen h2 {
-            color: #25d366;
-            margin-bottom: 15px;
-            font-size: 22px;
-        }
-        .auth-screen p {
-            font-size: 14px;
-            color: #8696a0;
-            margin-bottom: 25px;
-        }
-        .input-group {
-            width: 100%;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            color: #25d366;
-            margin-bottom: 6px;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 13px;
-            background: #1f2c34;
-            border: 1px solid #2a3942;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-        }
-        .btn-main {
-            width: 100%;
-            padding: 13px;
-            background: #25d366;
-            border: none;
-            border-radius: 8px;
-            color: #111b21;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 15px;
-        }
+        .main-app { display: flex; flex-direction: column; height: 100%; width: 100%; background: #0b141a; }
+        .top-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
+        .top-header .app-title { font-size: 23px; font-weight: 600; color: #e9edef; }
+        .header-actions { display: flex; gap: 22px; align-items: center; }
+        .header-actions i { font-size: 20px; color: #e9edef; cursor: pointer; }
 
-        /* Main WhatsApp Screen */
-        .main-app {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-            background: #0b141a;
-        }
+        .search-area { padding: 4px 16px 12px 16px; }
+        .search-input-box { background: #1f2c34; border-radius: 24px; display: flex; align-items: center; padding: 10px 16px; gap: 12px; }
+        .search-input-box i { color: #8696a0; font-size: 16px; }
+        .search-input-box input { background: transparent; border: none; color: #8696a0; font-size: 15px; outline: none; width: 100%; }
 
-        /* Header */
-        .top-header {
-            padding: 14px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .top-header .app-title {
-            font-size: 23px;
-            font-weight: 600;
-            color: #e9edef;
-            letter-spacing: 0.3px;
-        }
-        .header-actions {
-            display: flex;
-            gap: 22px;
-            align-items: center;
-        }
-        .header-actions i {
-            font-size: 20px;
-            color: #e9edef;
-            cursor: pointer;
-        }
+        .filter-chips { display: flex; gap: 8px; padding: 0 16px 12px 16px; overflow-x: auto; }
+        .chip { background: #1f2c34; color: #8696a0; padding: 6px 14px; border-radius: 18px; font-size: 13px; white-space: nowrap; cursor: pointer; }
+        .chip.active { background: #103629; color: #25d366; }
 
-        /* Search Bar */
-        .search-area {
-            padding: 4px 16px 12px 16px;
-        }
-        .search-input-box {
-            background: #1f2c34;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            padding: 10px 16px;
-            gap: 12px;
-        }
-        .search-input-box i {
-            color: #8696a0;
-            font-size: 16px;
-        }
-        .search-input-box input {
-            background: transparent;
-            border: none;
-            color: #8696a0;
-            font-size: 15px;
-            outline: none;
-            width: 100%;
-        }
+        .chat-list-container { flex: 1; overflow-y: auto; }
+        .chat-row { display: flex; align-items: center; padding: 12px 16px; cursor: pointer; gap: 14px; border-bottom: 1px solid #111b21; }
+        .chat-row:active { background: #1f2c34; }
+        .avatar-box { width: 50px; height: 50px; flex-shrink: 0; border-radius: 50%; background: #2a3942; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; font-size: 18px; overflow: hidden; }
+        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .chat-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 4px; }
+        .chat-info-top { display: flex; justifyContent: space-between; align-items: center; }
+        .user-name-text { font-size: 16px; font-weight: 500; color: #e9edef; }
+        .time-text { font-size: 12px; color: #8696a0; }
+        .chat-info-bottom { display: flex; justify-content: space-between; align-items: center; }
+        .last-msg-text { font-size: 14px; color: #8696a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Category Filter Chips */
-        .filter-chips {
-            display: flex;
-            gap: 8px;
-            padding: 0 16px 12px 16px;
-            overflow-x: auto;
-        }
-        .chip {
-            background: #1f2c34;
-            color: #8696a0;
-            padding: 6px 14px;
-            border-radius: 18px;
-            font-size: 13px;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .chip.active {
-            background: #103629;
-            color: #25d366;
-        }
+        /* Floating New Chat (+) Button */
+        .new-chat-btn { position: absolute; bottom: 80px; right: 20px; width: 56px; height: 56px; background: #25d366; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #111b21; font-size: 22px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); cursor: pointer; z-index: 5; }
 
-        /* Chat List */
-        .chat-list-container {
-            flex: 1;
-            overflow-y: auto;
-        }
-        .chat-row {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            cursor: pointer;
-            gap: 14px;
-        }
-        .chat-row:active {
-            background: #1f2c34;
-        }
-        .avatar-box {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            flex-shrink: 0;
-        }
-        .avatar-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: #2a3942;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #fff;
-            font-size: 18px;
-        }
-        .avatar-box.status-ring .avatar-img {
-            border: 2px solid #25d366;
-            padding: 1px;
-        }
-        .chat-info {
-            flex: 1;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .chat-info-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .user-name-text {
-            font-size: 16px;
-            font-weight: 500;
-            color: #e9edef;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .time-text {
-            font-size: 12px;
-            color: #8696a0;
-        }
-        .chat-info-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .last-msg-text {
-            font-size: 14px;
-            color: #8696a0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .check-blue {
-            color: #53bdeb;
-            font-size: 13px;
-        }
-        .call-icon-missed {
-            color: #f15c6d;
-            font-size: 13px;
-        }
-        .call-icon-income {
-            color: #8696a0;
-            font-size: 13px;
-        }
-        .pin-icon {
-            color: #8696a0;
-            font-size: 14px;
-            transform: rotate(45deg);
-        }
+        /* Bottom Navigation */
+        .bottom-nav { height: 64px; background: #0b141a; border-top: 1px solid #1f2c34; display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #8696a0; font-size: 12px; cursor: pointer; }
+        .nav-item i { font-size: 20px; padding: 4px 16px; border-radius: 16px; }
+        .nav-item.active { color: #e9edef; font-weight: 600; }
+        .nav-item.active i { background: #103629; color: #25d366; }
 
-        /* Floating Meta AI & New Chat Buttons */
-        .fab-wrapper {
-            position: absolute;
-            bottom: 75px;
-            right: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 12px;
-            z-index: 5;
-        }
-        .meta-ai-btn {
-            background: #1f2c34;
-            color: #e9edef;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            cursor: pointer;
-        }
-        .meta-ai-btn i {
-            background: linear-gradient(135deg, #a855f7, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 16px;
-        }
-        .new-chat-btn {
-            width: 54px;
-            height: 54px;
-            background: #25d366;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #111b21;
-            font-size: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            cursor: pointer;
-        }
-
-        /* Bottom Navigation Bar */
-        .bottom-nav {
-            height: 64px;
-            background: #0b141a;
-            border-top: 1px solid #1f2c34;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: #8696a0;
-            font-size: 12px;
-            cursor: pointer;
-            position: relative;
-        }
-        .nav-item i {
-            font-size: 20px;
-            padding: 4px 16px;
-            border-radius: 16px;
-        }
-        .nav-item.active {
-            color: #e9edef;
-            font-weight: 600;
-        }
-        .nav-item.active i {
-            background: #103629;
-            color: #25d366;
-        }
-        .nav-badge {
-            position: absolute;
-            top: 2px;
-            right: 18px;
-            background: #25d366;
-            color: #111b21;
-            font-size: 10px;
-            font-weight: bold;
-            border-radius: 10px;
-            padding: 1px 5px;
-        }
+        /* Views (Chats, Status, Calls) */
+        .view-section { display: none; flex: 1; flex-direction: column; overflow-y: auto; }
+        .view-section.active { display: flex; }
 
         /* Conversation Window */
-        .conversation-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0b141a;
-            display: flex;
-            flex-direction: column;
-            z-index: 10;
-        }
-        .conv-header {
-            background: #1f2c34;
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .conv-header i.back-btn {
-            font-size: 18px;
-            color: #8696a0;
-            cursor: pointer;
-            padding: 4px;
-        }
-        .conv-avatar-box {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #25d366;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #111b21;
-        }
-        .conv-title-info {
-            flex: 1;
-        }
-        .conv-title-info .name {
-            font-size: 16px;
-            font-weight: 500;
-        }
-        .conv-title-info .status {
-            font-size: 11px;
-            color: #8696a0;
-        }
-        .conv-actions {
-            display: flex;
-            gap: 18px;
-            color: #e9edef;
-            font-size: 18px;
-        }
+        .conversation-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0b141a; display: flex; flex-direction: column; z-index: 10; }
+        .conv-header { background: #1f2c34; padding: 10px 12px; display: flex; align-items: center; gap: 8px; }
+        .conv-header i.back-btn { font-size: 18px; color: #8696a0; cursor: pointer; padding: 4px; }
+        .conv-title-info { flex: 1; }
+        .conv-title-info .name { font-size: 16px; font-weight: 500; }
+        .conv-title-info .status { font-size: 11px; color: #8696a0; }
 
-        .messages-area {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            background-image: radial-gradient(#1f2c34 1px, transparent 0);
-            background-size: 16px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .msg-bubble {
-            max-width: 75%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            position: relative;
-            line-height: 1.4;
-            word-wrap: break-word;
-        }
-        .msg-incoming {
-            background: #1f2c34;
-            align-self: flex-start;
-            border-top-left-radius: 0;
-        }
-        .msg-outgoing {
-            background: #005c4b;
-            align-self: flex-end;
-            border-top-right-radius: 0;
-        }
-        .msg-time {
-            font-size: 10px;
-            color: #8696a0;
-            float: right;
-            margin-top: 4px;
-            margin-left: 10px;
-        }
+        .messages-area { flex: 1; padding: 15px; overflow-y: auto; background-image: radial-gradient(#1f2c34 1px, transparent 0); background-size: 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+        .msg-bubble { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 14px; position: relative; word-wrap: break-word; }
+        .msg-incoming { background: #1f2c34; align-self: flex-start; }
+        .msg-outgoing { background: #005c4b; align-self: flex-end; }
+        .msg-time { font-size: 10px; color: #8696a0; float: right; margin-top: 4px; margin-left: 10px; }
 
-        .chat-input-bar {
-            padding: 8px 10px;
-            background: #0b141a;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-        }
-        .input-wrapper {
-            flex: 1;
-            background: #1f2c34;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            padding: 6px 14px;
-            gap: 10px;
-        }
-        .input-wrapper i {
-            color: #8696a0;
-            font-size: 18px;
-        }
-        .input-wrapper input {
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            width: 100%;
-        }
-        .send-circle-btn {
-            width: 44px;
-            height: 44px;
-            background: #25d366;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #111b21;
-            font-size: 16px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
+        .chat-input-bar { padding: 8px 10px; background: #0b141a; display: flex; align-items: center; gap: 8px; width: 100%; }
+        .input-wrapper { flex: 1; background: #1f2c34; border-radius: 24px; display: flex; align-items: center; padding: 6px 14px; gap: 10px; }
+        .input-wrapper input { background: transparent; border: none; color: #fff; font-size: 15px; outline: none; width: 100%; }
+        .send-circle-btn { width: 44px; height: 44px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #111b21; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+
+        /* Modal for Contacts / Status */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: #111b21; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 15px; border: 1px solid #2a3942; }
+        .modal-content h3 { color: #25d366; }
 
         .hidden { display: none !important; }
     </style>
@@ -492,211 +94,94 @@
         <!-- STEP 1: Phone Auth -->
         <div id="step-phone" class="auth-screen">
             <h2>WhatsApp-a Xoş Gəlmisiniz</h2>
-            <p>Davam etmək üçün telefon nömrənizi daxil edin</p>
-            <div class="input-group">
-                <label>Ölkə</label>
-                <input type="text" value="Azerbaijan (+994)" readonly>
-            </div>
+            <p>Davam etmək üçün nömrənizi daxil edin</p>
             <div class="input-group">
                 <label>Telefon nömrəsi</label>
-                <input type="tel" id="phone" value="508932436" placeholder="050 000 00 00">
+                <input type="tel" id="phone" placeholder="050 000 00 00">
             </div>
-            <button class="btn-main" onclick="goToCode()">Növbəti</button>
+            <button class="btn-main" onclick="goToProfile()">Növbəti</button>
         </div>
 
-        <!-- STEP 2: Code Auth -->
-        <div id="step-code" class="auth-screen hidden">
-            <h2>Kodu daxil edin</h2>
-            <p id="code-info"></p>
-            <div class="input-group">
-                <label>Təsdiq kodu (6 rəqəm)</label>
-                <input type="text" id="verify-code" value="123456" maxlength="6">
-            </div>
-            <button class="btn-main" onclick="goToProfile()">Təsdiq Et</button>
-        </div>
-
-        <!-- STEP 3: Profile Setup -->
+        <!-- STEP 2: Profile Setup -->
         <div id="step-profile" class="auth-screen hidden">
             <h2>Profil Məlumatı</h2>
-            <p>Adınızı daxil edin</p>
+            <p>Adınızı yazın və profil şəkli seçin</p>
             <div class="input-group">
-                <label>Profil Adınız</label>
-                <input type="text" id="user-name" value="Orxan Sim Sim (Siz)">
+                <label>Adınız (məs: Orxan Usta)</label>
+                <input type="text" id="user-name" placeholder="Adınızı daxil edin">
             </div>
-            <button class="btn-main" onclick="startApp()">Daxil Ol</button>
+            <div class="input-group">
+                <label>Profil şəkli (link və ya seçin)</label>
+                <input type="file" id="profile-img-file" accept="image/*" style="color:#8696a0;">
+            </div>
+            <button class="btn-main" onclick="registerUser()">Daxil Ol</button>
         </div>
 
-        <!-- MAIN WHATSAPP SCREEN -->
+        <!-- MAIN APP -->
         <div id="main-app" class="main-app hidden">
             
-            <!-- Top Header -->
             <div class="top-header">
                 <div class="app-title">WhatsApp</div>
                 <div class="header-actions">
-                    <i class="fa-regular fa-camera"></i>
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                    <i class="fa-regular fa-camera" onclick="openStatusModal()"></i>
+                    <i class="fa-solid fa-ellipsis-vertical" onclick="logout()"></i>
                 </div>
             </div>
 
-            <!-- Search Area -->
-            <div class="search-area">
-                <div class="search-input-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Meta AI-dən soruşun və ya axtarın">
+            <!-- CHATS VIEW -->
+            <div id="view-chats" class="view-section active">
+                <div class="search-area">
+                    <div class="search-input-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Axtarış...">
+                    </div>
+                </div>
+                <div class="filter-chips">
+                    <div class="chip active">Hamısı</div>
+                    <div class="chip">Oxunmamış</div>
+                    <div class="chip">Sevimlilər</div>
+                </div>
+                <div class="chat-list-container" id="chat-list">
+                    <!-- Dinamik çatlar bura yığılacaq -->
                 </div>
             </div>
 
-            <!-- Filter Chips -->
-            <div class="filter-chips">
-                <div class="chip active">Hamısı</div>
-                <div class="chip">Oxunmamış 2</div>
-                <div class="chip">Sevimlilər</div>
-                <div class="chip">Qruplar</div>
-            </div>
-
-            <!-- Chat List -->
-            <div class="chat-list-container">
-                
-                <!-- Chat 1 -->
-                <div class="chat-row" onclick="openChat('Orxan Sim Sim (Siz)', 'O')">
-                    <div class="avatar-box">
-                        <div class="avatar-img" style="background-color: #3b82f6;">O</div>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-info-top">
-                            <span class="user-name-text">Orxan Sim Sim (Siz)</span>
-                            <span class="time-text">10:19</span>
-                        </div>
-                        <div class="chat-info-bottom">
-                            <span class="last-msg-text">
-                                <i class="fa-solid fa-check-double check-blue"></i> 8948041208:AAGSoSN_2518GXGLZ...
-                            </span>
-                            <i class="fa-solid fa-thumbtack pin-icon"></i>
+            <!-- STATUS VIEW -->
+            <div id="view-status" class="view-section">
+                <div style="padding: 16px;">
+                    <h3 style="color:#25d366; margin-bottom:15px;">Statuslar</h3>
+                    <div onclick="openStatusModal()" style="display:flex; align-items:center; gap:14px; cursor:pointer; margin-bottom:20px;">
+                        <div class="avatar-box" style="background:#25d366; color:#111b21;"><i class="fa-solid fa-plus"></i></div>
+                        <div>
+                            <div style="font-weight:500;">Status əlavə et</div>
+                            <div style="font-size:12px; color:#8696a0;">1 dəqiqəlik status paylaş</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Chat 2 -->
-                <div class="chat-row" onclick="openChat('Ev', 'E')">
-                    <div class="avatar-box">
-                        <div class="avatar-img" style="background-color: #f59e0b;">E</div>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-info-top">
-                            <span class="user-name-text">Ev</span>
-                            <span class="time-text">22:49</span>
-                        </div>
-                        <div class="chat-info-bottom">
-                            <span class="last-msg-text">
-                                <i class="fa-solid fa-phone call-icon-income"></i> Səsli zəng
-                            </span>
-                            <i class="fa-solid fa-thumbtack pin-icon"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat 3 -->
-                <div class="chat-row" onclick="openChat('Mama', 'M')">
-                    <div class="avatar-box">
-                        <div class="avatar-img" style="background-color: #ec4899;">M</div>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-info-top">
-                            <span class="user-name-text">Mama</span>
-                            <span class="time-text">18:47</span>
-                        </div>
-                        <div class="chat-info-bottom">
-                            <span class="last-msg-text">
-                                <i class="fa-solid fa-phone-slash call-icon-missed"></i> Buraxılmış səsli zəng
-                            </span>
-                            <i class="fa-solid fa-thumbtack pin-icon"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat 4 -->
-                <div class="chat-row" onclick="openChat('Yapon', 'Y')">
-                    <div class="avatar-box status-ring">
-                        <div class="avatar-img" style="background-color: #10b981;">Y</div>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-info-top">
-                            <span class="user-name-text">Yapon</span>
-                            <span class="time-text">21:46</span>
-                        </div>
-                        <div class="chat-info-bottom">
-                            <span class="last-msg-text">
-                                <i class="fa-solid fa-check-double check-blue"></i> Telqram kanlmı böyudməy isdəyirəm
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat 5 -->
-                <div class="chat-row" onclick="openChat('SERXAN Q Nar', 'S')">
-                    <div class="avatar-box">
-                        <div class="avatar-img" style="background-color: #6366f1;">S</div>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-info-top">
-                            <span class="user-name-text">SERXAN Q Nar</span>
-                            <span class="time-text">21:27</span>
-                        </div>
-                        <div class="chat-info-bottom">
-                            <span class="last-msg-text">
-                                <i class="fa-solid fa-check-double check-blue"></i> Airdrop
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat 6 -->
-                <div class="chat-row" onclick="openChat('Amin s', 'A')">
-                    <div class="avatar-box status-ring">
-                        <div class="avatar-img" style="background-color: #8b5cf6;">A</div>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-info-top">
-                            <span class="user-name-text">Amin s</span>
-                            <span class="time-text">19:05</span>
-                        </div>
-                        <div class="chat-info-bottom">
-                            <span class="last-msg-text">
-                                <i class="fa-solid fa-phone call-icon-income"></i> Səsli zəng
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Floating Action Buttons -->
-            <div class="fab-wrapper">
-                <div class="meta-ai-btn">
-                    <i class="fa-solid fa-atom"></i>
-                    <span>Meta AI-dan soruş</span>
-                </div>
-                <div class="new-chat-btn">
-                    <i class="fa-solid fa-comment-medical"></i>
+                    <div id="status-list"></div>
                 </div>
             </div>
 
-            <!-- Bottom Navigation Bar -->
+            <!-- CALLS VIEW -->
+            <div id="view-calls" class="view-section">
+                <div style="padding: 16px; color:#8696a0;">Zənglər tarixçəsi boşdur.</div>
+            </div>
+
+            <!-- Floating New Chat Button (+) -->
+            <div class="new-chat-btn" onclick="openNewChatModal()">
+                <i class="fa-solid fa-comment-medical"></i>
+            </div>
+
+            <!-- Bottom Nav -->
             <div class="bottom-nav">
-                <div class="nav-item active">
+                <div class="nav-item active" onclick="switchTab(0, this)">
                     <i class="fa-solid fa-message"></i>
                     <span>Söhbətlər</span>
-                    <span class="nav-badge">2</span>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" onclick="switchTab(1, this)">
                     <i class="fa-regular fa-circle-dot"></i>
                     <span>Yeniləmələr</span>
                 </div>
-                <div class="nav-item">
-                    <i class="fa-solid fa-user-group"></i>
-                    <span>İcmalar</span>
-                </div>
-                <div class="nav-item">
+                <div class="nav-item" onclick="switchTab(2, this)">
                     <i class="fa-solid fa-phone"></i>
                     <span>Zənglər</span>
                 </div>
@@ -708,31 +193,16 @@
         <div id="conversation-screen" class="conversation-screen hidden">
             <div class="conv-header">
                 <i class="fa-solid fa-arrow-left back-btn" onclick="closeChat()"></i>
-                <div class="conv-avatar-box" id="conv-avatar-icon">O</div>
+                <div class="avatar-box" id="conv-avatar" style="width:36px; height:36px; font-size:14px;">O</div>
                 <div class="conv-title-info">
-                    <div class="name" id="conv-title-text">Orxan Sim Sim</div>
+                    <div class="name" id="conv-title-text">Ad</div>
                     <div class="status">onlayn</div>
                 </div>
-                <div class="conv-actions">
-                    <i class="fa-solid fa-video"></i>
-                    <i class="fa-solid fa-phone"></i>
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </div>
             </div>
-
-            <div class="messages-area" id="messages-area">
-                <div class="msg-bubble msg-incoming">
-                    Salam! Hesab tam aktivləşdirildi.
-                    <span class="msg-time">10:19</span>
-                </div>
-            </div>
-
+            <div class="messages-area" id="messages-area"></div>
             <div class="chat-input-bar">
                 <div class="input-wrapper">
-                    <i class="fa-regular fa-face-smile"></i>
                     <input type="text" id="msg-input" placeholder="Mesaj yazın...">
-                    <i class="fa-solid fa-paperclip"></i>
-                    <i class="fa-solid fa-camera"></i>
                 </div>
                 <div class="send-circle-btn" onclick="sendMessage()">
                     <i class="fa-solid fa-paper-plane"></i>
@@ -740,68 +210,233 @@
             </div>
         </div>
 
+        <!-- NEW CHAT MODAL -->
+        <div id="modal-new-chat" class="modal hidden">
+            <div class="modal-content">
+                <h3>Yeni Söhbət / İstifadəçilər</h3>
+                <div id="registered-users-list" style="max-height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+                <button class="btn-main" onclick="closeModals()" style="margin-top:0;">Bağla</button>
+            </div>
+        </div>
+
+        <!-- STATUS POST MODAL -->
+        <div id="modal-status" class="modal hidden">
+            <div class="modal-content">
+                <h3>Status Paylaş (1 dəqiqəlik)</h3>
+                <input type="text" id="status-text-input" placeholder="Nə düşünürsünüz?" style="width:100%; padding:10px; background:#1f2c34; border:1px solid #2a3942; border-radius:8px; color:#fff; outline:none;">
+                <button class="btn-main" onclick="postStatus()">Paylaş</button>
+                <button class="btn-main" onclick="closeModals()" style="background:#1f2c34; color:#fff; margin-top:0;">Ləğv et</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        function goToCode() {
-            var phone = document.getElementById('phone').value;
-            if(!phone) return;
-            document.getElementById('code-info').innerText = 'Kod bu nömrəyə göndərildi: ' + phone;
-            document.getElementById('step-phone').classList.add('hidden');
-            document.getElementById('step-code').classList.remove('hidden');
+        let currentUser = JSON.parse(localStorage.getItem('wa_current_user')) || null;
+        let profilePicBase64 = "";
+
+        // Profil şəklini oxumaq
+        document.getElementById('profile-img-file').addEventListener('change', function(e) {
+            let file = e.target.files[0];
+            if(file) {
+                let reader = new FileReader();
+                reader.onload = function(event) { profilePicBase64 = event.target.result; }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Yoxla görək əvvəldən daxil olubmu?
+        if(currentUser) {
+            startMainApp();
         }
 
         function goToProfile() {
-            document.getElementById('step-code').classList.add('hidden');
+            let phone = document.getElementById('phone').value;
+            if(!phone) { alert('Nömrəni daxil edin!'); return; }
+            document.getElementById('step-phone').classList.add('hidden');
             document.getElementById('step-profile').classList.remove('hidden');
         }
 
-        function startApp() {
-            document.getElementById('step-profile').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
+        function registerUser() {
+            let name = document.getElementById('user-name').value;
+            let phone = document.getElementById('phone').value;
+            if(!name) { alert('Adınızı yazın!'); return; }
+
+            currentUser = {
+                name: name,
+                phone: phone,
+                avatar: profilePicBase64 || name.charAt(0).toUpperCase()
+            };
+
+            // Bütün istifadəçilər bazasına əlavə et
+            let users = JSON.parse(localStorage.getItem('wa_users')) || [];
+            if(!users.some(u => u.phone === phone)) {
+                users.push(currentUser);
+                localStorage.setItem('wa_users', JSON.stringify(users));
+            }
+
+            localStorage.setItem('wa_current_user', JSON.stringify(currentUser));
+            startMainApp();
         }
 
-        function openChat(title, icon) {
-            document.getElementById('conv-title-text').innerText = title;
-            document.getElementById('conv-avatar-icon').innerText = icon;
+        function startMainApp() {
+            document.getElementById('step-phone').classList.add('hidden');
+            document.getElementById('step-profile').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            loadChats();
+            loadStatuses();
+        }
+
+        function logout() {
+            if(confirm('Hesabdan çıxmaq istəyirsiniz?')) {
+                localStorage.removeItem('wa_current_user');
+                location.reload();
+            }
+        }
+
+        function switchTab(index, el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            el.classList.add('active');
+            if(index === 0) document.getElementById('view-chats').classList.add('active');
+            if(index === 1) document.getElementById('view-status').classList.add('active');
+            if(index === 2) document.getElementById('view-calls').classList.add('active');
+        }
+
+        function loadChats() {
+            let chatList = document.getElementById('chat-list');
+            chatList.innerHTML = '';
+            let users = JSON.parse(localStorage.getItem('wa_users')) || [];
+            
+            // Özündən başqa digər qeydiyyatdan keçənləri göstər
+            users.forEach(u => {
+                if(currentUser && u.phone !== currentUser.phone) {
+                    let avatarContent = u.avatar.length > 5 ? `<img src="${u.avatar}">` : u.avatar.charAt(0);
+                    chatList.innerHTML += `
+                        <div class="chat-row" onclick="openChat('${u.name}', '${u.phone}')">
+                            <div class="avatar-box">${avatarContent}</div>
+                            <div class="chat-info">
+                                <div class="chat-info-top">
+                                    <span class="user-name-text">${u.name}</span>
+                                    <span class="time-text">İndi</span>
+                                </div>
+                                <div class="chat-info-bottom">
+                                    <span class="last-msg-text">Söhbətə başla...</span>
+                                </div>
+                            </div>
+                        </div>`;
+                }
+            });
+        }
+
+        let activeChatUserPhone = null;
+
+        function openChat(name, phone) {
+            activeChatUserPhone = phone;
+            document.getElementById('conv-title-text').innerText = name;
+            document.getElementById('conv-avatar-text').innerText = name.charAt(0);
             document.getElementById('conversation-screen').classList.remove('hidden');
+            loadMessages();
         }
 
         function closeChat() {
             document.getElementById('conversation-screen').classList.add('hidden');
+            loadChats();
         }
 
         function sendMessage() {
-            var input = document.getElementById('msg-input');
-            var text = input.value.trim();
-            if(text === "") return;
+            let input = document.getElementById('msg-input');
+            let text = input.value.trim();
+            if(!text) return;
 
-            var msgArea = document.getElementById('messages-area');
-            var now = new Date();
-            var timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            let messages = JSON.parse(localStorage.getItem('wa_messages')) || {};
+            let chatKey = [currentUser.phone, activeChatUserPhone].sort().join('_');
+            if(!messages[chatKey]) messages[chatKey] = [];
 
-            var outMsg = document.createElement('div');
-            outMsg.className = 'msg-bubble msg-outgoing';
-            outMsg.innerHTML = text + '<span class="msg-time">' + timeStr + ' <i class="fa-solid fa-check-double" style="color:#53bdeb"></i></span>';
-            msgArea.appendChild(outMsg);
+            let now = new Date();
+            let timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
-            input.value = "";
-            msgArea.scrollTop = msgArea.scrollHeight;
+            messages[chatKey].push({ sender: currentUser.phone, text: text, time: timeStr });
+            localStorage.setItem('wa_messages', JSON.stringify(messages));
 
-            setTimeout(function() {
-                var inMsg = document.createElement('div');
-                inMsg.className = 'msg-bubble msg-incoming';
-                inMsg.innerHTML = 'Bəli, Usta! (' + text + ')<span class="msg-time">' + timeStr + '</span>';
-                msgArea.appendChild(inMsg);
-                msgArea.scrollTop = msgArea.scrollHeight;
-            }, 1000);
+            input.value = '';
+            loadMessages();
         }
 
-        document.getElementById('msg-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
+        function loadMessages() {
+            let msgArea = document.getElementById('messages-area');
+            msgArea.innerHTML = '';
+            let messages = JSON.parse(localStorage.getItem('wa_messages')) || {};
+            let chatKey = [currentUser.phone, activeChatUserPhone].sort().join('_');
+            let chatMsgs = messages[chatKey] || [];
+
+            chatMsgs.forEach(m => {
+                let isOut = m.sender === currentUser.phone;
+                msgArea.innerHTML += `
+                    <div class="msg-bubble ${isOut ? 'msg-outgoing' : 'msg-incoming'}">
+                        ${m.text}
+                        <span class="msg-time">${m.time}</span>
+                    </div>`;
+            });
+            msgArea.scrollTop = msgArea.scrollHeight;
+        }
+
+        function openNewChatModal() {
+            let list = document.getElementById('registered-users-list');
+            list.innerHTML = '';
+            let users = JSON.parse(localStorage.getItem('wa_users')) || [];
+            users.forEach(u => {
+                if(currentUser && u.phone !== currentUser.phone) {
+                    list.innerHTML += `
+                        <div style="padding:10px; background:#1f2c34; border-radius:8px; cursor:pointer;" onclick="closeModals(); openChat('${u.name}', '${u.phone}')">
+                            ${u.name} (${u.phone})
+                        </div>`;
+                }
+            });
+            document.getElementById('modal-new-chat').classList.remove('hidden');
+        }
+
+        function openStatusModal() {
+            document.getElementById('modal-status').classList.remove('hidden');
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
+        }
+
+        function postStatus() {
+            let text = document.getElementById('status-text-input').value;
+            if(!text) return;
+            let statuses = JSON.parse(localStorage.getItem('wa_statuses')) || [];
+            
+            let statusObj = { name: currentUser.name, text: text, time: new Date().getTime() };
+            statuses.push(statusObj);
+            localStorage.setItem('wa_statuses', JSON.stringify(statuses));
+
+            document.getElementById('status-text-input').value = '';
+            closeModals();
+            loadStatuses();
+            alert('Status 1 dəqiqəliyə paylaşıldı!');
+        }
+
+        function loadStatuses() {
+            let list = document.getElementById('status-list');
+            list.innerHTML = '';
+            let statuses = JSON.parse(localStorage.getItem('wa_statuses')) || [];
+            let now = new Date().getTime();
+
+            // 1 dəqiqədən (60000 ms) köhnə statusları təmizlə
+            statuses = statuses.filter(s => (now - s.time) < 60000);
+            localStorage.setItem('wa_statuses', JSON.stringify(statuses));
+
+            statuses.forEach(s => {
+                list.innerHTML += `
+                    <div style="padding:10px; background:#1f2c34; border-radius:8px; margin-bottom:8px;">
+                        <div style="font-weight:bold; color:#25d366; font-size:14px;">${s.name}</div>
+                        <div style="font-size:15px; margin-top:4px;">${s.text}</div>
+                    </div>`;
+            });
+        }
     </script>
 </body>
 </html>
