@@ -64,6 +64,8 @@
         .conv-title-info { flex: 1; }
         .conv-title-info .name { font-size: 16px; font-weight: 500; }
         .conv-title-info .status { font-size: 11px; color: #8696a0; }
+        .conv-call-actions { display: flex; gap: 18px; align-items: center; margin-right: 6px; }
+        .conv-call-actions i { font-size: 18px; color: #25d366; cursor: pointer; }
 
         .messages-area { flex: 1; padding: 15px; overflow-y: auto; background-image: radial-gradient(#1f2c34 1px, transparent 0); background-size: 16px 16px; display: flex; flex-direction: column; gap: 10px; }
         .msg-bubble { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 14px; position: relative; word-wrap: break-word; }
@@ -192,6 +194,10 @@
                 <div class="conv-title-info">
                     <div class="name" id="conv-title-text">Ad</div>
                     <div class="status">onlayn</div>
+                </div>
+                <div class="conv-call-actions">
+                    <i class="fa-solid fa-phone" onclick="startCall('audio')" title="Səsli zəng"></i>
+                    <i class="fa-solid fa-video" onclick="startCall('video')" title="Görüntülü zəng"></i>
                 </div>
             </div>
             <div class="messages-area" id="messages-area"></div>
@@ -386,6 +392,13 @@
         function closeChat() {
             document.getElementById('conversation-screen').classList.add('hidden');
             loadChats();
+        }
+
+        function startCall(type) {
+            // Tamamilə pulsuz Jitsi Meet zəng otağı yaradırıq
+            let roomName = 'OrxanWhatsAppCall_' + [currentUser.phone, activeChatUserPhone].sort().join('_');
+            let jitsiUrl = `https://meet.jit.si/${roomName}`;
+            window.open(jitsiUrl, '_blank');
         }
 
         function sendMessage() {
