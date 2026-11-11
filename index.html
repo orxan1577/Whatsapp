@@ -71,34 +71,62 @@
         button:hover {
             background: #008f72;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>WhatsApp-a Xoş Gəlmisiniz</h2>
-        <p>Davam etmək üçün telefon nömrənizi daxil edin</p>
-        
-        <div class="input-group">
-            <label>Ölkə</label>
-            <input type="text" value="Azerbaijan (+994)" readonly>
+        <div id="step-phone">
+            <h2>WhatsApp-a Xoş Gəlmisiniz</h2>
+            <p>Davam etmək üçün telefon nömrənizi daxil edin</p>
+            
+            <div class="input-group">
+                <label>Ölkə</label>
+                <input type="text" value="Azerbaijan (+994)" readonly>
+            </div>
+            
+            <div class="input-group">
+                <label>Telefon nömrəsi</label>
+                <input type="tel" id="phone" placeholder="050 000 00 00">
+            </div>
+            
+            <button onclick="sendCode()">Növbəti</button>
         </div>
-        
-        <div class="input-group">
-            <label>Telefon nömrəsi</label>
-            <input type="tel" id="phone" placeholder="050 000 00 00">
+
+        <div id="step-code" class="hidden">
+            <h2>Kodu daxil edin</h2>
+            <p id="code-info"></p>
+            
+            <div class="input-group">
+                <label>Təsdiq kodu (6 rəqəm)</label>
+                <input type="text" id="verify-code" placeholder="_ _ _ _ _ _">
+            </div>
+            
+            <button onclick="verifyCode()">Təsdiq Et</button>
         </div>
-        
-        <button onclick="submitPhone()">Növbəti</button>
     </div>
 
     <script>
-        function submitPhone() {
+        function sendCode() {
             var phone = document.getElementById('phone').value;
             if(phone.length < 9) {
                 alert('Zəhmət olmasa düzgün nömrə daxil edin!');
             } else {
-                alert('Təsdiq kodu göndərildi: ' + phone);
+                document.getElementById('step-phone').classList.add('hidden');
+                document.getElementById('step-code').classList.remove('hidden');
+                document.getElementById('code-info').innerText = 'Kod bu nömrəyə göndərildi: ' + phone;
+            }
+        }
+
+        function verifyCode() {
+            var code = document.getElementById('verify-code').value;
+            if(code.length < 4) {
+                alert('Zəhmət olmasa kodu tam daxil edin!');
+            } else {
+                alert('Uğurla daxil oldunuz!');
             }
         }
     </script>
